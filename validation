@@ -1,0 +1,24 @@
+<?php
+$x=$_POST['name'];
+$y=$_POST['password'];
+session_start();
+
+mysql_connect("localhost","root","");
+mysql_select_db("student");
+
+$query="SELECT *FROM userinfo WHERE name='$x'AND password='$y'";
+$result=mysql_query($query);
+$num=mysql_num_rows($result);
+if($num)
+{
+ //echo "Login Succesful";
+ $_SESSION['username']=$x;
+ header('location:home.php');
+ }
+ else
+ {
+    echo "Signup first!!";
+	header('location:login.php');
+}
+
+?>
