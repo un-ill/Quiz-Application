@@ -1,0 +1,85 @@
+<?php
+session_start();
+if(!isset($_SESSION['username'])){
+header('location:login.php');
+
+}
+$con=mysqli_connect("localhost","root","");
+mysqli_select_db($con,'quizdatabase');
+
+?>
+<html>
+	<head>
+<title> Home Page</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+	<div class="col-lg-8 m-auto d-block">
+  <br><h1 class="text-center text-primary">Un-ill Webdeveloper Quiz</h1><br>
+  <h2><center>Hi <?php echo $_SESSION['username'];?></center></h2>
+
+<div class="card">
+	<form action="check.php" method="POST">
+	<h3 class="text-center card-header">Welcome <?php echo $_SESSION['username'];?>  Select only one option!:)</h3>
+
+</div>
+<br>
+<?php
+for($i=1;$i<4;$i++){
+
+$query="select * from questions where qid=$i";
+$res=mysqli_query($con,$query);
+
+while($rows=mysqli_fetch_array($res)){
+?>
+	<div class="card">
+		<h4 class="card-header">  <?php  echo $rows['questions'] ?>     </h4>
+
+		<?php
+          
+          $ans="select * from answers where a_id=$i";
+          $result=mysqli_query($con,$ans);
+          while($row=mysqli_fetch_array($result)){
+  			?>
+  			<div class="card-body">
+  				<input type="radio" name="valuecheck[<?php echo $row['a_id']; ?>]" value="<?php echo $row[aid];; ?>">
+ 				 <?php echo $row['answer'] ?> 
+            
+
+  			</div>
+
+  			<?php
+          }
+
+
+		?>
+		
+
+	</div>
+	<?php
+}
+}
+?><br>
+<input type="submit" name="submit" value="submit" class="btn-primary">
+</div>
+
+<br>
+<a href="logout.php" class="btn btn-primary">LOGOUT</a>
+</form>
+</div>
+</body>
+</html>
