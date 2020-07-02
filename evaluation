@@ -1,0 +1,63 @@
+<?php
+session_start();
+if(!isset($_SESSION['username'])){
+header('location:login.php');
+
+}
+$con=mysqli_connect("localhost","root","");
+mysqli_select_db($con,'quizdatabase');
+
+if(isset($_POST['submit'])){
+	if(!empty($_POST['valuecheck']))
+	{
+		$count=count($_POST['valuecheck']);
+	}
+	echo "total attempted question is". $count;
+
+	$selected=$_POST['valuecheck'];
+	print_r($selected);
+	$result=0;
+	$i=1;
+
+	$q="select * from questions";
+	$query=mysqli_query($con,$q);
+	while ($rows=mysqli_fetch_array($query)) {
+		print_r($rows['ans_id']);
+		$checked=$rows['ans_id']==$selected[$i];
+		if($checked)
+		{
+			$result++;
+		}
+		$i++;
+		# code...
+	}
+	echo "<br>total score=".$result;
+?>
+<br><br>
+
+
+<html>
+	<head>
+<title> Home Page</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+
+	<a href="logout.php" class="btn btn-primary">LOGOUT</a>
+	<?php
+}
+$name=$_SESSION['username'];
+$query="insert into user(username,totalques,answercorrect) values('$name','$count','$result')";
+mysqli_query($con,$query);
+
+?>
