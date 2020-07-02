@@ -1,0 +1,28 @@
+<?php
+$x=$_POST['name'];
+$y=$_POST['password'];
+
+mysql_connect("localhost","root","");
+mysql_select_db("student");
+
+$query="SELECT *FROM userinfo WHERE name='$x'AND password='$y'";
+$result=mysql_query($query);
+$num=mysql_num_rows($result);
+if($x=="" ||$y=="")
+{
+	echo "fill all entries!!";
+}
+else if($num)
+{
+ echo "user name and password already exist";
+ }
+ else
+ {
+
+$query="INSERT INTO userinfo(name,password) VALUES ('$x','$y')";
+mysql_query($query);
+echo "Registration Successful!!";
+header('location:login.php');
+}
+
+?>
